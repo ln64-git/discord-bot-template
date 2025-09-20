@@ -1,6 +1,6 @@
 import { Client, Collection, GatewayIntentBits, REST, Routes } from "discord.js";
-import type { Command } from "./types";
 import { loadCommands } from "./utils/loadCommands";
+import type { Command } from "./types";
 
 export class Bot {
     public client: Client;
@@ -72,17 +72,17 @@ export class Bot {
                     Routes.applicationGuildCommands(appId, process.env.GUILD_ID),
                     { body: commands },
                 );
-                console.log(`✅ Slash commands registered to guild ${process.env.GUILD_ID}.`);
+                console.log(`🔹 Slash commands registered for ${this.client.guilds.cache.get(process.env.GUILD_ID)?.name}.`);
             } else {
                 // Global deployment (takes up to an hour)
                 await rest.put(
                     Routes.applicationCommands(appId),
                     { body: commands },
                 );
-                console.log("✅ Global slash commands registered.");
+                console.log("🔹 Global slash commands registered to all guilds.");
             }
         } catch (error) {
-            console.error("❌ Error registering slash commands:", error);
+            console.error("🔸 Error registering slash commands:", error);
         }
     }
 }
