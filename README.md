@@ -1,54 +1,84 @@
 # Discord Bot Template
 
-A clean, minimal Discord bot template built with TypeScript and Discord.js v14.
+A minimal, production-ready Discord bot template built with TypeScript and Discord.js v14. Designed to be "plug and play" with minimal setup required.
 
-## Features
+## ✨ Features
 
-- 🔹 Dynamic command registration
-- 🔹 TypeScript support with proper type definitions
-- 🔹 Error handling with emoji indicators
-- 🔹 Guild-specific or global command deployment
-- 🔹 Clean, extensible architecture
-- 🔹 MongoDB integration ready
+- 🔹 **Dynamic command registration** - Commands are automatically loaded from the commands directory
+- 🔹 **TypeScript support** - Full type safety with proper type definitions
+- 🔹 **Advanced error handling** - Comprehensive error handling with user-friendly messages
+- 🔹 **Flexible deployment** - Guild-specific or global command deployment
+- 🔹 **Clean architecture** - Modular, extensible codebase
+- 🔹 **Database integration** - MongoDB support with connection pooling
+- 🔹 **Docker support** - Ready for containerized deployment
+- 🔹 **Setup automation** - Interactive setup script for easy configuration
 
-## Quick Start
+## 🚀 Quick Start
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+### Option 1: Automated Setup (Recommended)
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd discord-bot-template
 
-2. **Create a `.env` file:**
-   ```env
-   BOT_TOKEN=your_discord_bot_token_here
-   GUILD_ID=your_guild_id_for_testing  # Optional, for guild-specific commands
-   MONGO_URI=mongodb://localhost:27017  # Optional, for database features
-   ```
+# Install dependencies
+npm install
 
-3. **Run the bot:**
-   ```bash
-   npm start
-   ```
+# Run the interactive setup
+npm run setup
 
-## Project Structure
+# Start the bot
+npm start
+```
+
+### Option 2: Manual Setup
+```bash
+# Install dependencies
+npm install
+
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your configuration
+# Then start the bot
+npm start
+```
+
+### Option 3: Docker Setup
+```bash
+# Using Docker Compose (includes MongoDB)
+docker-compose up -d
+
+# Or build and run manually
+docker build -t discord-bot .
+docker run -d --env-file .env discord-bot
+```
+
+## 📁 Project Structure
 
 ```
 src/
-├── Bot.ts              # Main bot class
-├── main.ts             # Entry point
-├── commands/           # Command files
-│   └── ping.ts
-├── types/              # TypeScript type definitions
+├── Bot.ts                    # Main bot class
+├── main.ts                   # Entry point
+├── config/                   # Configuration system
 │   └── index.ts
-└── utils/              # Utility functions
-    └── database.ts
+├── commands/                 # Command files
+│   └── ping.ts              # Basic ping command
+├── types/                   # TypeScript type definitions
+│   └── index.ts
+└── utils/                   # Utility functions
+    ├── database.ts          # Database connection
+    └── loadCommands.ts      # Command loader
 
-docs/                   # Documentation
+scripts/
+└── setup.js                # Interactive setup script
+
+docs/                       # Documentation
 ├── SYNC_COMMAND_README.md
 └── USER_TRACKING_README.md
 
-data/                   # Runtime data (gitignored)
-└── logs/              # Log files
+data/                       # Runtime data (gitignored)
+└── logs/                   # Log files
 ```
 
 ## Adding Commands
