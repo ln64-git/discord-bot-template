@@ -1,6 +1,6 @@
-import { Client, Collection, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from "discord.js";
+import { Client, Collection, GatewayIntentBits, REST, Routes } from "discord.js";
 import type { Command } from "./types";
-
+import { loadCommands } from "./utils/loadCommands";
 
 export class Bot {
     public client: Client;
@@ -18,12 +18,9 @@ export class Bot {
 
     async init() {
         await this.client.login(this.token);
-        console.log(`🔹 Logged in as ${this.client.user?.tag}!`);
-
+        await this.deployCommands();
         this.setupEventHandlers();
-        await this.registerCommands();
-
-        console.log("🔹 Bot is running!");
+        console.log(`🔹 Logged in as ${this.client.user?.tag}!`);
     }
 
     private setupEventHandlers() {
@@ -38,6 +35,7 @@ export class Bot {
 
             const command = this.commands.get(interaction.commandName);
             if (!command) return;
+
             try {
                 await command.execute(interaction);
             } catch (error) {
@@ -58,9 +56,9 @@ export class Bot {
         });
     }
 
-    private async registerCommands() {
+    private async deployCommands() {
         const rest = new REST({ version: "10" }).setToken(this.token);
-        const commands = Array.from(this.commands.values()).map(command => command.data.toJSON());
+        const commands = await loadCommands(this.client, this.commands);
 
         const appId = this.client.application?.id;
         if (!appId) {
@@ -74,18 +72,17 @@ export class Bot {
                     Routes.applicationGuildCommands(appId, process.env.GUILD_ID),
                     { body: commands },
                 );
-                console.log(`🔹 Slash commands registered to guild ${process.env.GUILD_ID}.`);
+                console.log(`✅ Slash commands registered to guild ${process.env.GUILD_ID}.`);
             } else {
                 // Global deployment (takes up to an hour)
                 await rest.put(
                     Routes.applicationCommands(appId),
                     { body: commands },
                 );
-                console.log("🔹 Global slash commands registered.");
+                console.log("✅ Global slash commands registered.");
             }
         } catch (error) {
-            console.error("🔸 Error registering slash commands:", error);
+            console.error("❌ Error registering slash commands:", error);
         }
     }
-
 }
